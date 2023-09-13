@@ -8,7 +8,8 @@ class DB:
         """
         To get the list of all the tables in the database
         """
-        pass
+        tables = self.db.tables()
+        return tables
         
     def get_phone(self,brand,idx):
         """
@@ -29,3 +30,4 @@ class DB:
     
 if __name__ == "__main__":
     smartphone = DB("data.json")
+    print(smartphone.get_tables())
