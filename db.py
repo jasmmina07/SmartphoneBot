@@ -9,7 +9,7 @@ class DB:
         To get the list of all the tables in the database
         """
         tables = self.db.tables()
-        return tables
+        return list(tables)
         
     def get_phone(self,brand,idx):
         """
@@ -19,15 +19,23 @@ class DB:
         return:
             dict
         """
-        pass
+        phone = self.db.table(brand)
+        return phone.get(doc_id=idx)
 
     def get_phone_list(self,brand):
         """
         Return phone list
         """
-        pass
+        phone = self.db.table(brand)
+        return phone.all()
 
     
 if __name__ == "__main__":
     smartphone = DB("data.json")
-    print(smartphone.get_tables())
+    tables = smartphone.get_tables()
+    brand = tables[0]
+    phones = smartphone.get_phone_list(brand)
+
+    phone = phones[4]
+    doc_id = phone.doc_id
+    print(smartphone.get_phone(brand, doc_id))
