@@ -55,7 +55,7 @@ class DB:
         To get the list of all the tables in the database
         """
         tables = self.db.tables()
-        return tables
+        return list(tables)
         
     def get_phone(self):
         """
@@ -65,6 +65,7 @@ class DB:
         return:
             dict
         """
+
         # phone=self.db.table(brand)
         # return phone.get(doc_id=idx)
         phone=["Apple","Huawei","Nokia","Oppo","Redmi","Samsung","Vivo"]
@@ -74,11 +75,19 @@ class DB:
         """
         Return phone list
         """
-        phone=self.db.table(brand)
+
+        phone = self.db.table(brand)
         return phone.all()
-        
+
 
     
 if __name__ == "__main__":
     smartphone = DB("data.json")
-    print(smartphone.phone_photo("Apple",2))
+
+    tables = smartphone.get_tables()
+    brand = tables[0]
+    phones = smartphone.get_phone_list(brand)
+
+    phone = phones[4]
+    doc_id = phone.doc_id
+    print(smartphone.get_phone(brand, doc_id))
