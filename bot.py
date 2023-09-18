@@ -70,9 +70,24 @@ def phone(update: Update, context: CallbackContext):
     phone = db_py.get_phone(brand, doc_id)
 
     text=f"name: {phone['name']}\nprice: {phone['price']} $\ncolor: {phone['color']} "
-    
-    bot.sendPhoto(chat_id, phone['img_url'], caption=text)
+    add_cart = InlineKeyboardButton(text='add 🛒', callback_data="add_cart")
+    keyboard = InlineKeyboardMarkup([[add_cart]])
+
+    bot.sendPhoto(chat_id, phone['img_url'], caption=text, reply_markup=keyboard)
     query.answer("Done!")
+
+def add_cart(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query.answer("add cart")
+
+def cart(update: Update, context: CallbackContext):
+    query = update.callback_query
+    order = InlineKeyboardButton(text="order",callback_data="order")
+    remove = InlineKeyboardButton(text="remove",callback_data="order")
+
+    keyboard = InlineKeyboardMarkup([[order, remove]])
+
+    query.edit_message_text(text="Cart menu",reply_markup=keyboard)
 
 updater=Updater(token=TOKEN)
 dp=updater.dispatcher
@@ -82,7 +97,8 @@ dp.add_handler(CallbackQueryHandler(product, pattern="Shop"))
 dp.add_handler(CallbackQueryHandler(products, pattern="products"))
 dp.add_handler(CallbackQueryHandler(phone, pattern="phone"))
 dp.add_handler(CallbackQueryHandler(main_menu, pattern="main_menu"))
-# dp.add_handler(CallbackQueryHandler(main))
+dp.add_handler(CallbackQueryHandler(add_cart, pattern="add_cart"))
+dp.add_handler(CallbackQueryHandler(cart, pattern="Cart"))
 
 updater.start_polling()
 updater.idle()
